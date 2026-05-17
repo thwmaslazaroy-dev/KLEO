@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal, RefreshControl } from 'react-native'
 import { supabase } from '@/lib/supabase/client'
 import { processRollovers, CATEGORIES } from '@kleo/shared'
+import { haptic } from '@/lib/haptics'
 import type { Task, Category, Priority } from '@kleo/shared'
 
 const C = {
@@ -29,6 +30,8 @@ export default function TasksScreen() {
 
   async function toggleTask(task: Task) {
     const status = task.status === 'done' ? 'pending' : 'done'
+    if (status === 'done') haptic.success()
+    else haptic.light()
     await supabase.from('tasks').update({ status }).eq('id', task.id)
     setTasks((prev) => prev.map((t) => t.id === task.id ? { ...t, status } : t))
   }

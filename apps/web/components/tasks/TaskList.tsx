@@ -24,7 +24,7 @@ export default function TaskList({ tasks: initialTasks, showOverdueBadge }: Task
   if (tasks.length === 0) return null
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 stagger">
       {tasks.map((task) => (
         <TaskCard
           key={task.id}
