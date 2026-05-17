@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Vibration } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import { snoozeAlarm } from '@/lib/alarms/scheduler'
+import { playAlarmSound, stopAlarmSound } from '@/lib/alarms/music'
+import type { Alarm } from '@kleo/shared'
 
 const C = { bg: '#141E2E', coral: '#E8523A', teal: '#2BB8B8', white: '#FFFFFF', muted: '#9AA5B8' }
 
@@ -11,30 +13,36 @@ interface AlarmRingerProps {
   time: string
   snoozeMinutes: number
   onDismiss: () => void
+  alarm?: Partial<Alarm>
 }
 
-export default function AlarmRinger({ alarmId, label, time, snoozeMinutes, onDismiss }: AlarmRingerProps) {
+export default function AlarmRinger({ alarmId, label, time, snoozeMinutes, onDismiss, alarm }: AlarmRingerProps) {
   const pulse = useRef(new Animated.Value(1)).current
 
   useEffect(() => {
     Vibration.vibrate([500, 1000, 500, 1000], true)
+    if (alarm && (alarm.sound_type === 'file' || alarm.sound_type === 'spotify')) {
+      playAlarmSound(alarm as Alarm)
+    }
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1.05, duration: 500, useNativeDriver: true }),
         Animated.timing(pulse, { toValue: 1,    duration: 500, useNativeDriver: true }),
       ])
     ).start()
-    return () => { Vibration.cancel(); pulse.stopAnimation() }
+    return () => { Vibration.cancel(); pulse.stopAnimation(); stopAlarmSound() }
   }, [])
 
   async function handleSnooze() {
     Vibration.cancel()
+    await stopAlarmSound()
     await snoozeAlarm(alarmId, snoozeMinutes)
     onDismiss()
   }
 
   function handleDismiss() {
     Vibration.cancel()
+    stopAlarmSound()
     Notifications.dismissAllNotificationsAsync()
     onDismiss()
   }
