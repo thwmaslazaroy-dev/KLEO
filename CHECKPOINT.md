@@ -2,7 +2,7 @@
 
 Αρχείο παρακολούθησης προόδου. Ενημερώνεται μετά από κάθε session.
 
-**Τελευταία ενημέρωση:** 2026-05-17 — Phase 4 ✅ Ολοκληρώθηκε
+**Τελευταία ενημέρωση:** 2026-05-17 — Phase 5 ✅ Ολοκληρώθηκε
 
 ---
 
@@ -14,7 +14,7 @@
 | Phase 2 | Core Modules (Calendar, Notes, Thoughts, Journal, Goals) | ✅ Ολοκληρώθηκε |
 | Phase 3 | Goals enhanced, Stats, Weekly Review, Archive | ✅ Ολοκληρώθηκε |
 | Phase 4 | Work Schedule, Alarms, Push Notifications, Edge Functions | ✅ Ολοκληρώθηκε |
-| Phase 5 | Notifications & AI (Gemini context, adaptive learning) | ⬜ Εκκρεμεί |
+| Phase 5 | AI Layer — Gemini, Daily Brief, Prioritize, Voice, Chat, Learning | ✅ Ολοκληρώθηκε |
 | Phase 6 | Polish | ⬜ Εκκρεμεί |
 
 ---
