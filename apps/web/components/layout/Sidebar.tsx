@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { clsx } from 'clsx'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 import type { Profile } from '@kleo/shared'
 
 const NAV = [
@@ -75,12 +76,15 @@ export default function Sidebar({ profile }: SidebarProps) {
           </div>
           <span className="text-sm text-muted truncate">{profile?.full_name ?? 'Tommy'}</span>
         </div>
-        <button
-          onClick={handleLogout}
-          className="text-xs text-muted hover:text-white transition"
-        >
-          Αποσύνδεση
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handleLogout}
+            className="text-xs text-muted hover:text-white transition"
+          >
+            Αποσύνδεση
+          </button>
+          <ThemeToggle />
+        </div>
       </div>
     </aside>
   )
