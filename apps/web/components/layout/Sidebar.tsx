@@ -7,17 +7,18 @@ import { clsx } from 'clsx'
 import type { Profile } from '@kleo/shared'
 
 const NAV = [
-  { href: '/',          label: 'Σήμερα',       icon: '☀️' },
-  { href: '/tasks',     label: 'Tasks',        icon: '✅' },
-  { href: '/calendar',  label: 'Ημερολόγιο',   icon: '📅' },
-  { href: '/notes',     label: 'Σημειώσεις',   icon: '📝' },
-  { href: '/thoughts',  label: 'Σκέψεις',      icon: '💭' },
-  { href: '/journal',   label: 'Ημερολόγιο',   icon: '📔' },
+  { href: '/',                     label: 'Σήμερα',         icon: '☀️' },
+  { href: '/tasks',                label: 'Tasks',          icon: '✅' },
+  { href: '/calendar',             label: 'Ημερολόγιο',     icon: '📅' },
+  { href: '/notes',                label: 'Σημειώσεις',     icon: '📝' },
+  { href: '/thoughts',             label: 'Σκέψεις',        icon: '💭' },
+  { href: '/journal',              label: 'Ημερολόγιο',     icon: '📔' },
   { href: '/goals',     label: 'Στόχοι',       icon: '🎯' },
   { href: '/contacts',  label: 'Επαφές',       icon: '👥' },
   { href: '/alarms',    label: 'Ξυπνητήρια',   icon: '⏰' },
-  { href: '/stats',     label: 'Στατιστικά',   icon: '📊' },
-  { href: '/archive',   label: 'Αρχείο',       icon: '🗂️' },
+  { href: '/stats',                label: 'Στατιστικά',     icon: '📊' },
+  { href: '/stats/weekly-review', label: 'Weekly Review',  icon: '📋' },
+  { href: '/archive',              label: 'Αρχείο',         icon: '🗂️' },
 ]
 
 interface SidebarProps {
