@@ -5,6 +5,7 @@ export const CATEGORIES: Record<Category, { label: string; emoji: string; color:
   bills:      { label: 'Λογαριασμοί', emoji: '💰', color: '#f59e0b' },
   projects:   { label: 'Projects',    emoji: '🚀', color: '#10b981' },
   clients:    { label: 'Πελάτες',     emoji: '👥', color: '#3b82f6' },
+  work:       { label: 'Εργασία',     emoji: '💼', color: '#0ea5e9' },
   misc:       { label: 'Λοιπά',       emoji: '📌', color: '#8b5cf6' },
 }
 

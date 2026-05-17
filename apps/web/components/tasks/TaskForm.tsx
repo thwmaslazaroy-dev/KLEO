@@ -19,9 +19,32 @@ export default function TaskForm({ userId, onCreated }: TaskFormProps) {
   const [category, setCategory] = useState<Category>('misc')
   const [priority, setPriority] = useState<Priority>('medium')
   const [dueDate, setDueDate] = useState('')
+  const [reminderAt, setReminderAt] = useState('')
+  const [reminderManual, setReminderManual] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const supabase = createClient()
+
+  function handleDueDateChange(value: string) {
+    setDueDate(value)
+    // Auto-set reminder to due_date + 1h unless user has manually changed it
+    if (!reminderManual && value) {
+      const d = new Date(value)
+      d.setHours(d.getHours() + 1)
+      const pad = (n: number) => String(n).padStart(2, '0')
+      const auto = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+      setReminderAt(auto)
+    }
+    if (!value) {
+      setReminderAt('')
+      setReminderManual(false)
+    }
+  }
+
+  function handleReminderChange(value: string) {
+    setReminderAt(value)
+    setReminderManual(true)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -37,11 +60,14 @@ export default function TaskForm({ userId, onCreated }: TaskFormProps) {
         priority,
         due_date: dueDate || null,
         original_due_date: dueDate || null,
+        reminder_at: reminderAt || null,
       })
       if (error) throw error
 
       setTitle('')
       setDueDate('')
+      setReminderAt('')
+      setReminderManual(false)
       setCategory('misc')
       setPriority('medium')
       setOpen(false)
@@ -105,8 +131,25 @@ export default function TaskForm({ userId, onCreated }: TaskFormProps) {
             label="Προθεσμία (προαιρετικό)"
             type="datetime-local"
             value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+            onChange={(e) => handleDueDateChange(e.target.value)}
           />
+
+          {dueDate && (
+            <div>
+              <label className="block text-sm text-muted mb-1">
+                Υπενθύμιση
+                {!reminderManual && reminderAt && (
+                  <span className="ml-2 text-xs text-teal/70">αυτόματα +1ώρα</span>
+                )}
+              </label>
+              <input
+                type="datetime-local"
+                value={reminderAt}
+                onChange={(e) => handleReminderChange(e.target.value)}
+                className="w-full bg-bg-elevated border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal text-sm transition"
+              />
+            </div>
+          )}
 
           {error && (
             <p className="text-coral text-sm">{error}</p>

@@ -1,4 +1,4 @@
-export type Category = 'university' | 'bills' | 'projects' | 'clients' | 'misc'
+export type Category = 'university' | 'bills' | 'projects' | 'clients' | 'work' | 'misc'
 export type TaskStatus = 'pending' | 'in_progress' | 'done' | 'cancelled'
 export type Priority = 'low' | 'medium' | 'high' | 'urgent'
 export type RecurringType = 'daily' | 'weekly' | 'monthly' | null
