@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, Modal, StyleSheet } from 'react-native'
 import { supabase } from '@/lib/supabase/client'
 import { CATEGORIES } from '@kleo/shared'
+import VoiceInput from './VoiceInput'
 import type { Category } from '@kleo/shared'
 
 const C = { bg: '#141E2E', elevated: '#1E2D42', coral: '#E8523A', teal: '#2BB8B8', muted: '#9AA5B8', white: '#FFFFFF', border: 'rgba(255,255,255,0.1)' }
@@ -49,15 +50,35 @@ export default function QuickCapture({ userId }: QuickCaptureProps) {
               ))}
             </View>
 
-            <TextInput
-              style={styles.input}
-              placeholder={type === 'task' ? 'Τι πρέπει να κάνεις;' : 'Τι σκέφτεσαι;'}
-              placeholderTextColor={C.muted}
-              value={content}
-              onChangeText={setContent}
-              autoFocus
-              multiline
-            />
+            <View style={{ position: 'relative' }}>
+              <TextInput
+                style={[styles.input, { paddingRight: 52 }]}
+                placeholder={type === 'task' ? 'Τι πρέπει να κάνεις;' : 'Τι σκέφτεσαι;'}
+                placeholderTextColor={C.muted}
+                value={content}
+                onChangeText={setContent}
+                autoFocus
+                multiline
+              />
+              {type === 'task' && (
+                <View style={{ position: 'absolute', right: 10, top: 10 }}>
+                  <VoiceInput
+                    onTaskParsed={async (task) => {
+                      setContent(task.title)
+                      setOpen(false)
+                      await supabase.from('tasks').insert({
+                        user_id: userId,
+                        title: task.title,
+                        category: task.category,
+                        priority: task.priority,
+                        due_date: task.due_date,
+                        reminder_at: task.reminder_at,
+                      })
+                    }}
+                  />
+                </View>
+              )}
+            </View>
 
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <TouchableOpacity style={styles.cancelBtn} onPress={() => setOpen(false)}>
