@@ -2,7 +2,7 @@
 
 Αρχείο παρακολούθησης προόδου. Ενημερώνεται μετά από κάθε session.
 
-**Τελευταία ενημέρωση:** 2026-05-17 — Phase 1 ✅ Ολοκληρώθηκε
+**Τελευταία ενημέρωση:** 2026-05-17 — Phase 2 ✅ Ολοκληρώθηκε
 
 ---
 
@@ -11,7 +11,7 @@
 | Phase | Τίτλος | Κατάσταση |
 |---|---|---|
 | Phase 1 | Foundation (Monorepo, Auth, Tasks, Today) | ✅ Ολοκληρώθηκε |
-| Phase 2 | Core Modules (Calendar, Notes, Journal, Offline) | ⬜ Εκκρεμεί |
+| Phase 2 | Core Modules (Calendar, Notes, Thoughts, Journal, Goals) | ✅ Ολοκληρώθηκε |
 | Phase 3 | Goals, Stats, Archive | ⬜ Εκκρεμεί |
 | Phase 4 | Ωράριο & Ξυπνητήρια | ⬜ Εκκρεμεί |
 | Phase 5 | Notifications & AI | ⬜ Εκκρεμεί |
