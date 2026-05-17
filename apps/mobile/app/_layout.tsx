@@ -4,9 +4,12 @@ import { StatusBar } from 'expo-status-bar'
 import { supabase } from '@/lib/supabase/client'
 import { initDB } from '@/lib/sqlite/db'
 import { registerPushToken } from '@/lib/notifications/push'
+import { setupNotificationHandler, setupNotificationListeners } from '@/lib/notifications/handler'
 import { hasPIN } from '@/lib/security/pin'
 import { useRouter, useSegments } from 'expo-router'
 import type { Session } from '@supabase/supabase-js'
+
+setupNotificationHandler()
 
 export default function RootLayout() {
   const [session, setSession] = useState<Session | null>(null)
@@ -16,6 +19,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     initDB()
+    const cleanupListeners = setupNotificationListeners()
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -26,7 +30,7 @@ export default function RootLayout() {
       (_event, session) => setSession(session)
     )
 
-    return () => subscription.unsubscribe()
+    return () => { subscription.unsubscribe(); cleanupListeners() }
   }, [])
 
   useEffect(() => {
