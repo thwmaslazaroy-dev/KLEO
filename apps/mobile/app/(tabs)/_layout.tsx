@@ -31,8 +31,9 @@ export default function TabsLayout() {
       <Tabs.Screen name="notes"    options={{ title: 'Σημειώσεις', tabBarIcon: ({ color }) => <TabIcon icon="📝" color={color} /> }} />
       <Tabs.Screen name="thoughts" options={{ title: 'Σκέψεις',    tabBarIcon: ({ color }) => <TabIcon icon="💭" color={color} /> }} />
       <Tabs.Screen name="journal"  options={{ title: 'Ημερολόγιο', tabBarIcon: ({ color }) => <TabIcon icon="📔" color={color} /> }} />
-      <Tabs.Screen name="goals"    options={{ title: 'Στόχοι',   tabBarIcon: ({ color }) => <TabIcon icon="🎯" color={color} /> }} />
+      <Tabs.Screen name="goals"    options={{ title: 'Στόχοι',     tabBarIcon: ({ color }) => <TabIcon icon="🎯" color={color} /> }} />
       <Tabs.Screen name="alarms"   options={{ title: 'Ξυπνητήρια', tabBarIcon: ({ color }) => <TabIcon icon="⏰" color={color} /> }} />
+      <Tabs.Screen name="search"   options={{ title: 'Αναζήτηση',  tabBarIcon: ({ color }) => <TabIcon icon="🔍" color={color} /> }} />
     </Tabs>
   )
 }

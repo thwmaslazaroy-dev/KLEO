@@ -18,7 +18,9 @@ const NAV = [
   { href: '/alarms',    label: 'Ξυπνητήρια',   icon: '⏰' },
   { href: '/stats',                label: 'Στατιστικά',     icon: '📊' },
   { href: '/stats/weekly-review', label: 'Weekly Review',  icon: '📋' },
+  { href: '/search',               label: 'Αναζήτηση',      icon: '🔍' },
   { href: '/archive',              label: 'Αρχείο',         icon: '🗂️' },
+  { href: '/settings',             label: 'Ρυθμίσεις',      icon: '⚙️' },
 ]
 
 interface SidebarProps {
