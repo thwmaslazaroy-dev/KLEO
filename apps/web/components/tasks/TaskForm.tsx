@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { CATEGORIES } from '@kleo/shared'
 import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
+import Input from '@/components/ui/Input'   // still used for title field
+import DateTimePicker from '@/components/ui/DateTimePicker'
 import type { Category, Priority } from '@kleo/shared'
 
 interface TaskFormProps {
@@ -14,6 +16,7 @@ interface TaskFormProps {
 }
 
 export default function TaskForm({ userId, onCreated }: TaskFormProps) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState<Category>('misc')
@@ -72,6 +75,7 @@ export default function TaskForm({ userId, onCreated }: TaskFormProps) {
       setPriority('medium')
       setOpen(false)
       onCreated?.()
+      router.refresh()   // refresh Server Component data
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Κάτι πήγε στραβά')
     } finally {
@@ -127,28 +131,23 @@ export default function TaskForm({ userId, onCreated }: TaskFormProps) {
             </div>
           </div>
 
-          <Input
+          <DateTimePicker
             label="Προθεσμία (προαιρετικό)"
-            type="datetime-local"
             value={dueDate}
-            onChange={(e) => handleDueDateChange(e.target.value)}
+            onChange={handleDueDateChange}
+            placeholder="Επέλεξε ημερομηνία"
           />
 
           {dueDate && (
-            <div>
-              <label className="block text-sm text-muted mb-1">
-                Υπενθύμιση
-                {!reminderManual && reminderAt && (
-                  <span className="ml-2 text-xs text-teal/70">αυτόματα +1ώρα</span>
-                )}
-              </label>
-              <input
-                type="datetime-local"
-                value={reminderAt}
-                onChange={(e) => handleReminderChange(e.target.value)}
-                className="w-full bg-bg-elevated border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal text-sm transition"
-              />
-            </div>
+            <DateTimePicker
+              label={
+                reminderManual
+                  ? 'Υπενθύμιση'
+                  : 'Υπενθύμιση (αυτόματα +1ώρα — άλλαξέ τη αν θέλεις)'
+              }
+              value={reminderAt}
+              onChange={handleReminderChange}
+            />
           )}
 
           {error && (
