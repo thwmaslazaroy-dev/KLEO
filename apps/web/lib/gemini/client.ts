@@ -78,7 +78,13 @@ export async function callGemini({
 
   if (!res.ok) {
     const body = await res.text().catch(() => '')
-    throw new Error(`Gemini ${res.status}: ${body.slice(0, 200)}`)
+    if (res.status === 429) {
+      throw new Error('Το δωρεάν Gemini quota εξαντλήθηκε. Δοκίμασε ξανά σε λίγο ή δες το https://aistudio.google.com/app/apikey')
+    }
+    if (res.status === 401 || res.status === 403) {
+      throw new Error('Gemini API key μη έγκυρο — δημιούργησε νέο στο https://aistudio.google.com/app/apikey')
+    }
+    throw new Error(`Gemini ${res.status}: ${body.slice(0, 300)}`)
   }
 
   const data = await res.json()
