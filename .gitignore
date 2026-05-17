@@ -1,0 +1,20 @@
+node_modules
+.next
+dist
+.env
+.env.local
+.env.*.local
+.turbo
+
+# Expo
+.expo
+android/
+ios/
+
+# Supabase
+supabase/.branches
+supabase/.temp
+
+# OS
+.DS_Store
+Thumbs.db
