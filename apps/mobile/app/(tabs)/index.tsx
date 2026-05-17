@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, AppState } from 'react-native'
 import { supabase } from '@/lib/supabase/client'
 import { processRollovers, isToday, CATEGORIES } from '@kleo/shared'
+import { refreshWidget } from '@/widget/KleoWidget'
 import type { Task, Goal } from '@kleo/shared'
 
 const C = {
@@ -39,7 +40,14 @@ export default function TodayScreen() {
     setProfile(prof)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+    // Refresh widget when app comes to foreground
+    const sub = AppState.addEventListener('change', state => {
+      if (state === 'active') refreshWidget()
+    })
+    return () => sub.remove()
+  }, [])
 
   async function toggleTask(task: Task) {
     const status = task.status === 'done' ? 'pending' : 'done'
