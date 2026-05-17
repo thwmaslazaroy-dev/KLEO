@@ -56,7 +56,7 @@ export default async function TodayPage() {
 
       {schedule && <ShiftBadge schedule={schedule} />}
 
-      <DailyBrief userId={user.id} />
+      <DailyBrief />
 
       {overdueTasks.length > 0 && (
         <section>
