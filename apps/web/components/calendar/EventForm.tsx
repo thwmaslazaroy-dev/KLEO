@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { CATEGORIES } from '@kleo/shared'
 import Modal from '@/components/ui/Modal'
@@ -11,19 +11,35 @@ import type { Category } from '@kleo/shared'
 interface EventFormProps {
   userId: string
   onCreated?: () => void
+  onCancel?: () => void
+  prefillDate?: string
+  autoOpen?: boolean
 }
 
-export default function EventForm({ userId, onCreated }: EventFormProps) {
-  const [open, setOpen] = useState(false)
+export default function EventForm({ userId, onCreated, onCancel, prefillDate, autoOpen }: EventFormProps) {
+  const [open, setOpen] = useState(autoOpen ?? false)
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState<Category>('misc')
-  const [startAt, setStartAt] = useState('')
+  const [startAt, setStartAt] = useState(prefillDate ?? '')
   const [endAt, setEndAt] = useState('')
   const [location, setLocation] = useState('')
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const supabase = createClient()
+
+  useEffect(() => {
+    if (prefillDate) setStartAt(prefillDate)
+  }, [prefillDate])
+
+  useEffect(() => {
+    if (autoOpen) setOpen(true)
+  }, [autoOpen])
+
+  function handleClose() {
+    setOpen(false)
+    onCancel?.()
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -41,7 +57,7 @@ export default function EventForm({ userId, onCreated }: EventFormProps) {
         description: description.trim() || null,
       })
       if (error) throw error
-      setTitle(''); setStartAt(''); setEndAt(''); setLocation(''); setDescription('')
+      setTitle(''); setStartAt(prefillDate ?? ''); setEndAt(''); setLocation(''); setDescription('')
       setOpen(false)
       onCreated?.()
     } catch (err) {
@@ -53,8 +69,11 @@ export default function EventForm({ userId, onCreated }: EventFormProps) {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} size="sm">+ Νέο Event</Button>
-      <Modal open={open} onClose={() => setOpen(false)} title="Νέο Event">
+      {!autoOpen && (
+        <Button onClick={() => setOpen(true)} size="sm">+ Νέο Event</Button>
+      )}
+
+      <Modal open={open} onClose={handleClose} title="Νέο Event">
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Τίτλος" value={title} onChange={e => setTitle(e.target.value)} placeholder="Τι έχεις;" required autoFocus />
           <div className="grid grid-cols-2 gap-3">
@@ -74,7 +93,7 @@ export default function EventForm({ userId, onCreated }: EventFormProps) {
           </div>
           {error && <p className="text-coral text-sm">{error}</p>}
           <div className="flex gap-3 pt-1">
-            <Button type="button" variant="secondary" className="flex-1" onClick={() => setOpen(false)}>Άκυρο</Button>
+            <Button type="button" variant="secondary" className="flex-1" onClick={handleClose}>Άκυρο</Button>
             <Button type="submit" className="flex-1" disabled={loading}>{loading ? 'Αποθήκευση...' : 'Αποθήκευση'}</Button>
           </div>
         </form>
