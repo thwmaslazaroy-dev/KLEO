@@ -92,11 +92,16 @@ export default function AlarmForm({ userId, onCreated }: AlarmFormProps) {
               <p className="text-sm font-medium text-white">Smart Alarm ⚡</p>
               <p className="text-xs text-muted mt-0.5">Αυτόματη προσαρμογή βάσει βάρδιας</p>
               {smartAlarm && (
-                <div className="mt-3">
+                <div className="mt-3 w-full overflow-hidden">
                   <label className="block text-xs text-muted mb-1">Λεπτά πριν τη βάρδια</label>
-                  <input type="range" min={0} max={120} step={5} value={shiftOffset}
-                    onChange={e => setShiftOffset(Number(e.target.value))}
-                    className="w-full accent-teal" />
+                  <div className="w-full overflow-hidden">
+                    <input
+                      type="range" min={0} max={120} step={5} value={shiftOffset}
+                      onChange={e => setShiftOffset(Number(e.target.value))}
+                      style={{ width: '100%', maxWidth: '100%', display: 'block' }}
+                      className="accent-teal"
+                    />
+                  </div>
                   <p className="text-xs text-teal mt-1">{shiftOffset} λεπτά πριν</p>
                 </div>
               )}

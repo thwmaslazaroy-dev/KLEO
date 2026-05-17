@@ -21,30 +21,33 @@ export default function QuickCapture({ userId }: QuickCaptureProps) {
   const [loading, setLoading] = useState(false)
   const supabase = createClient()
 
+  const [saveError, setSaveError] = useState('')
+
   async function handleSave() {
     if (!content.trim()) return
     setLoading(true)
+    setSaveError('')
 
     try {
+      let result
       if (type === 'task') {
-        await supabase.from('tasks').insert({
-          user_id: userId,
-          title: content.trim(),
-          category,
-          priority: 'medium',
+        result = await supabase.from('tasks').insert({
+          user_id: userId, title: content.trim(), category, priority: 'medium',
         })
       } else if (type === 'thought') {
-        await supabase.from('thoughts').insert({
-          user_id: userId,
-          content: content.trim(),
-          category,
+        result = await supabase.from('thoughts').insert({
+          user_id: userId, content: content.trim(), category,
         })
       } else {
-        await supabase.from('notes').insert({
-          user_id: userId,
-          content: content.trim(),
-          category,
+        result = await supabase.from('notes').insert({
+          user_id: userId, content: content.trim(), category,
         })
+      }
+
+      if (result.error) {
+        console.error('[QuickCapture]', result.error.code, result.error.message)
+        setSaveError(`${result.error.code}: ${result.error.message}`)
+        return
       }
 
       setContent('')
@@ -122,6 +125,9 @@ export default function QuickCapture({ userId }: QuickCaptureProps) {
             </select>
           </div>
 
+          {saveError && (
+            <p className="text-xs text-coral bg-coral/10 rounded-lg px-3 py-2">{saveError}</p>
+          )}
           <div className="flex gap-3">
             <Button variant="secondary" className="flex-1" onClick={() => setOpen(false)}>
               Άκυρο

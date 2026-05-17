@@ -24,18 +24,20 @@ export default function TaskCard({ task, showOverdueBadge, onUpdate, onDelete }:
     if (loading) return
     setLoading(true)
     const status = task.status === 'done' ? 'pending' : 'done'
-    await supabase.from('tasks').update({ status }).eq('id', task.id)
-    onUpdate?.(task.id, { status })
-    // Trigger adaptive learning after status change
-    if (status === 'done' || status === 'pending') {
+    const { error } = await supabase.from('tasks').update({ status }).eq('id', task.id)
+    if (error) {
+      console.error('[TaskCard markDone]', error.code, error.message)
+    } else {
+      onUpdate?.(task.id, { status })
       triggerInsightsUpdate(task.user_id)
     }
     setLoading(false)
   }
 
   async function archive() {
-    await supabase.from('tasks').update({ archived: true }).eq('id', task.id)
-    onDelete?.(task.id)
+    const { error } = await supabase.from('tasks').update({ archived: true }).eq('id', task.id)
+    if (error) console.error('[TaskCard archive]', error.code, error.message)
+    else onDelete?.(task.id)
   }
 
   const isDone = task.status === 'done'
