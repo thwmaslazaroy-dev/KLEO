@@ -8,6 +8,8 @@ import type { WorkSchedule } from '@kleo/shared'
 
 export default function SettingsPage() {
   const [userId, setUserId] = useState('')
+  const [exporting, setExporting] = useState(false)
+  const [exportDone, setExportDone] = useState(false)
   const [schedules, setSchedules] = useState<WorkSchedule[]>([])
   const supabase = createClient()
 
@@ -25,6 +27,20 @@ export default function SettingsPage() {
 
   useEffect(() => { load() }, [load])
 
+  async function handleExport() {
+    setExporting(true)
+    const res = await fetch('/api/export')
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'kleo-backup-' + new Date().toISOString().split('T')[0] + '.json'
+    a.click()
+    URL.revokeObjectURL(url)
+    setExporting(false); setExportDone(true)
+    setTimeout(() => setExportDone(false), 3000)
+  }
+
   async function toggleActive(id: string, current: boolean) {
     await supabase.from('work_schedules').update({ is_active: !current }).eq('id', id)
     setSchedules(p => p.map(s => s.id === id ? { ...s, is_active: !current } : s))
@@ -38,6 +54,23 @@ export default function SettingsPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-8 animate-fade-in">
       <h1 className="text-2xl font-heading font-bold">Ρυθμίσεις</h1>
+
+      {/* Export / Backup */}
+      <section className="border-t border-white/5 pt-6">
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="font-medium text-white">Export / Backup</h2>
+            <p className="text-xs text-muted mt-1">Κατεβάζει όλα τα δεδομένα σου ως JSON</p>
+          </div>
+          <button
+            onClick={handleExport}
+            disabled={exporting}
+            className="text-sm bg-bg-elevated hover:bg-white/5 text-white border border-white/10 px-4 py-2 rounded-xl transition disabled:opacity-50"
+          >
+            {exportDone ? '✓ Έγινε!' : exporting ? '...' : '⬇ Export JSON'}
+          </button>
+        </div>
+      </section>
 
       {/* Work schedules */}
       <section>
