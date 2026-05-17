@@ -65,7 +65,12 @@ export default async function WeeklyReviewPage() {
       </div>
 
       {/* AI Review */}
-      <WeeklyReview initialReview={review?.reflection ?? ''} />
+      <WeeklyReview
+        initialReview={review?.reflection ?? ''}
+        weekStart={weekStartStr}
+        completedTasks={completedCount}
+        moodAverage={avgMood}
+      />
 
       {/* Past reviews */}
       <PastReviews userId={user.id} />
