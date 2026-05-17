@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { processRollovers, sortTodayTasks, isToday, CATEGORIES, getCurrentShift } from '@kleo/shared'
 import DailyBrief from '@/components/ai/DailyBrief'
+import AIPrioritize from '@/components/ai/AIPrioritize'
 import TaskList from '@/components/tasks/TaskList'
 import ShiftBadge from '@/components/schedule/ShiftBadge'
 import type { Task, Thought, Goal, WorkSchedule } from '@kleo/shared'
@@ -57,6 +58,7 @@ export default async function TodayPage() {
       {schedule && <ShiftBadge schedule={schedule} />}
 
       <DailyBrief />
+      <AIPrioritize />
 
       {overdueTasks.length > 0 && (
         <section>

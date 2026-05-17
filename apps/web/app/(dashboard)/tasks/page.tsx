@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { processRollovers } from '@kleo/shared'
 import TaskList from '@/components/tasks/TaskList'
 import TaskForm from '@/components/tasks/TaskForm'
+import AIPrioritize from '@/components/ai/AIPrioritize'
 import type { Task } from '@kleo/shared'
 
 export default async function TasksPage() {
@@ -28,6 +29,8 @@ export default async function TasksPage() {
         <h1 className="text-2xl font-heading font-bold">Tasks</h1>
         <TaskForm userId={user.id} />
       </div>
+
+      <AIPrioritize />
 
       {pending.length > 0 && (
         <section>
