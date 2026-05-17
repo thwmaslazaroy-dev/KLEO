@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { CATEGORIES, PRIORITY_COLORS, PRIORITY_LABELS } from '@kleo/shared'
+import { triggerInsightsUpdate } from '@/lib/ai/insights'
 import RolloverBadge from './RolloverBadge'
 import Badge from '@/components/ui/Badge'
 import type { Task } from '@kleo/shared'
@@ -25,6 +26,10 @@ export default function TaskCard({ task, showOverdueBadge, onUpdate, onDelete }:
     const status = task.status === 'done' ? 'pending' : 'done'
     await supabase.from('tasks').update({ status }).eq('id', task.id)
     onUpdate?.(task.id, { status })
+    // Trigger adaptive learning after status change
+    if (status === 'done' || status === 'pending') {
+      triggerInsightsUpdate(task.user_id)
+    }
     setLoading(false)
   }
 
