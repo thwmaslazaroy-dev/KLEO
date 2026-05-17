@@ -43,6 +43,9 @@ Context: ${JSON.stringify(ctx)}`,
 {"title":string,"category":"university"|"bills"|"projects"|"clients"|"misc","priority":"low"|"medium"|"high"|"urgent","due_date":"YYYY-MM-DD"|null,"reminder_at":"YYYY-MM-DDTHH:mm"|null}`,
 }
 
+const GEMINI_MODEL = 'gemini-flash-lite-latest'
+const GEMINI_URL   = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
+
 export async function callGemini({
   type,
   userMessage,
@@ -57,36 +60,29 @@ export async function callGemini({
     throw new Error('GEMINI_API_KEY δεν έχει οριστεί στο .env.local')
   }
 
-  const res = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gemini-2.0-flash',
-        messages: [
-          { role: 'system', content: PROMPTS[type](context) },
-          { role: 'user', content: userMessage },
-        ],
-        max_tokens: 1000,
-      }),
-    }
-  )
+  const systemPrompt = PROMPTS[type](context)
+
+  const res = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+      generationConfig: { maxOutputTokens: 1000, temperature: 0.7 },
+    }),
+  })
 
   if (!res.ok) {
     const body = await res.text().catch(() => '')
     if (res.status === 429) {
-      throw new Error('Το δωρεάν Gemini quota εξαντλήθηκε. Δοκίμασε ξανά σε λίγο ή δες το https://aistudio.google.com/app/apikey')
+      throw new Error('Gemini quota exceeded — δοκίμασε ξανά σε λίγο.')
     }
     if (res.status === 401 || res.status === 403) {
-      throw new Error('Gemini API key μη έγκυρο — δημιούργησε νέο στο https://aistudio.google.com/app/apikey')
+      throw new Error('Gemini API key μη έγκυρο.')
     }
     throw new Error(`Gemini ${res.status}: ${body.slice(0, 300)}`)
   }
 
   const data = await res.json()
-  return (data.choices?.[0]?.message?.content as string) ?? ''
+  return (data.candidates?.[0]?.content?.parts?.[0]?.text as string) ?? ''
 }
