@@ -35,9 +35,12 @@ export default function NoteEditor({ userId, note, open, onClose, onSaved }: Not
     }
   }, [note, open])
 
+  const [error, setError] = useState('')
+
   async function handleSave() {
     if (!content.trim()) return
     setLoading(true)
+    setError('')
     const payload = {
       title: title.trim() || null,
       content: content.trim(),
@@ -46,13 +49,21 @@ export default function NoteEditor({ userId, note, open, onClose, onSaved }: Not
     }
     try {
       if (note) {
-        const { data } = await supabase.from('notes').update(payload).eq('id', note.id).select().single()
+        const { data, error } = await supabase.from('notes').update(payload).eq('id', note.id).select().single()
+        if (error) throw error
+        if (!data) throw new Error('Δεν επιστράφηκαν δεδομένα')
         onSaved(data as Note)
       } else {
-        const { data } = await supabase.from('notes').insert({ user_id: userId, ...payload }).select().single()
+        const { data, error } = await supabase.from('notes').insert({ user_id: userId, ...payload }).select().single()
+        if (error) throw error
+        if (!data) throw new Error('Δεν επιστράφηκαν δεδομένα')
         onSaved(data as Note)
       }
       onClose()
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Κάτι πήγε στραβά'
+      console.error('[note save]:', msg)
+      setError(msg)
     } finally {
       setLoading(false)
     }
@@ -82,6 +93,9 @@ export default function NoteEditor({ userId, note, open, onClose, onSaved }: Not
           </div>
           <Input label="Tags (κόμμα)" value={tags} onChange={e => setTags(e.target.value)} placeholder="ιδέα, δουλειά..." />
         </div>
+        {error && (
+          <p className="text-sm text-coral bg-coral/10 rounded-xl px-4 py-2.5">✕ {error}</p>
+        )}
         <div className="flex gap-3 pt-1">
           <Button variant="secondary" className="flex-1" onClick={onClose}>Άκυρο</Button>
           <Button className="flex-1" onClick={handleSave} disabled={loading || !content.trim()}>{loading ? 'Αποθήκευση...' : 'Αποθήκευση'}</Button>

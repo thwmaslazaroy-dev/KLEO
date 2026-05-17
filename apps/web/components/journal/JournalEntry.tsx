@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import MoodPicker from './MoodPicker'
 import Button from '@/components/ui/Button'
-import { MOOD_LABELS } from '@kleo/shared'
 import type { JournalEntry } from '@kleo/shared'
 
 interface JournalEntryFormProps {
@@ -20,10 +19,15 @@ export default function JournalEntryForm({ userId, date, existing, onSaved }: Jo
   const [highlights, setHighlights] = useState(existing?.highlights?.join('\n') ?? '')
   const [tomorrowFocus, setTomorrowFocus] = useState(existing?.tomorrow_focus ?? '')
   const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'saved' | 'error'>('idle')
+  const [errorMsg, setErrorMsg] = useState('')
   const supabase = createClient()
 
   async function handleSave() {
     setLoading(true)
+    setStatus('idle')
+    setErrorMsg('')
+
     const payload = {
       user_id: userId,
       date,
@@ -32,14 +36,27 @@ export default function JournalEntryForm({ userId, date, existing, onSaved }: Jo
       highlights: highlights.split('\n').map(h => h.trim()).filter(Boolean),
       tomorrow_focus: tomorrowFocus.trim() || null,
     }
+
     try {
-      if (existing) {
-        const { data } = await supabase.from('journal_entries').update(payload).eq('id', existing.id).select().single()
-        onSaved(data as JournalEntry)
-      } else {
-        const { data } = await supabase.from('journal_entries').insert(payload).select().single()
-        onSaved(data as JournalEntry)
-      }
+      // Always upsert — handles both new entries and updates safely.
+      // The unique constraint (user_id, date) makes this idempotent.
+      const { data, error } = await supabase
+        .from('journal_entries')
+        .upsert(payload, { onConflict: 'user_id,date' })
+        .select()
+        .single()
+
+      if (error) throw error
+      if (!data) throw new Error('Δεν επιστράφηκαν δεδομένα από τη βάση')
+
+      onSaved(data as JournalEntry)
+      setStatus('saved')
+      setTimeout(() => setStatus('idle'), 3000)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Άγνωστο σφάλμα'
+      console.error('[journal save]:', msg)
+      setErrorMsg(msg)
+      setStatus('error')
     } finally {
       setLoading(false)
     }
@@ -82,7 +99,19 @@ export default function JournalEntryForm({ userId, date, existing, onSaved }: Jo
         />
       </div>
 
-      <Button onClick={handleSave} disabled={loading} className="w-full">
+      {status === 'error' && (
+        <p className="text-sm text-coral bg-coral/10 rounded-xl px-4 py-3">
+          ✕ {errorMsg}
+        </p>
+      )}
+
+      {status === 'saved' && (
+        <p className="text-sm text-teal bg-teal/10 rounded-xl px-4 py-3">
+          ✓ Αποθηκεύτηκε
+        </p>
+      )}
+
+      <Button onClick={handleSave} disabled={loading || !userId} className="w-full">
         {loading ? 'Αποθήκευση...' : 'Αποθήκευση ημερολογίου'}
       </Button>
     </div>
