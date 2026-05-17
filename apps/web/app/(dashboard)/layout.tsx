@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import QuickCapture from '@/components/layout/QuickCapture'
 import OfflineBanner from '@/components/layout/OfflineBanner'
+import ChatButton from '@/components/ai/ChatButton'
 
 export default async function DashboardLayout({
   children,
@@ -32,6 +33,7 @@ export default async function DashboardLayout({
       </div>
 
       <QuickCapture userId={user.id} />
+      <ChatButton />
     </div>
   )
 }
