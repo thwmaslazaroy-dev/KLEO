@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ data: response })
   } catch (error) {
-    console.error('[ai/chat]:', error)
-    return NextResponse.json({ error: 'Κάτι πήγε στραβά' }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('[ai/chat]:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }

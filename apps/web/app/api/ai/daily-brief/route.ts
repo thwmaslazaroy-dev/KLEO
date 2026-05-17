@@ -9,11 +9,16 @@ export async function GET() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+    console.log('[daily-brief] GEMINI_API_KEY set:', !!process.env.GEMINI_API_KEY)
+
     const context = await buildUserContext(user.id)
+    console.log('[daily-brief] context built for user:', user.id)
+
     const now = new Date()
     const greeting = `Είναι ${now.toLocaleString('el-GR')}. Τι έχω σήμερα;`
 
     const response = await callGemini({ type: 'daily_brief', userMessage: greeting, context })
+    console.log('[daily-brief] response length:', response.length)
 
     await supabase.from('ai_interactions').insert({
       user_id: user.id,
@@ -24,7 +29,8 @@ export async function GET() {
 
     return NextResponse.json({ data: response })
   } catch (error) {
-    console.error('[ai/daily-brief]:', error)
-    return NextResponse.json({ error: 'Κάτι πήγε στραβά' }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    console.error('[ai/daily-brief] ERROR:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
