@@ -1,0 +1,30 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: kleo-web
+    restart: always
+    env_file:
+      - .env.production
+    networks:
+      - kleo-network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: kleo-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - web
+    networks:
+      - kleo-network
+
+networks:
+  kleo-network:
+    driver: bridge
