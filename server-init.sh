@@ -6,7 +6,7 @@ APP_DIR="/opt/kleo"
 
 echo ""
 echo "================================================"
-echo "  Kleo — Server Init (HTTP, no SSL)"
+echo "  Kleo — Server Init"
 echo "================================================"
 echo ""
 
@@ -15,7 +15,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# ── 1. Install packages ──────────────────────────────────────────────────────
+# ── 1. Install ───────────────────────────────────────────────────────────────
 echo "[1/5] Installing Docker, git, certbot..."
 apt-get update -qq
 apt-get install -y -qq git certbot curl
@@ -24,7 +24,7 @@ apt-get install -y -qq docker-compose-plugin
 systemctl enable --now docker
 echo "      Done."
 
-# ── 2. Clone repo ────────────────────────────────────────────────────────────
+# ── 2. Clone ─────────────────────────────────────────────────────────────────
 echo ""
 echo "[2/5] Cloning repository..."
 if [ -d "$APP_DIR/.git" ]; then
@@ -35,7 +35,7 @@ else
 fi
 echo "      Done."
 
-# ── 3. HTTP-only nginx (no SSL certs needed) ─────────────────────────────────
+# ── 3. HTTP-only nginx (no SSL for now) ──────────────────────────────────────
 echo ""
 echo "[3/5] Writing HTTP-only nginx config..."
 cat > "$APP_DIR/nginx.conf" <<'NGINX'
@@ -81,7 +81,7 @@ http {
 }
 NGINX
 
-# Override docker-compose to strip the letsencrypt SSL volume from nginx
+# Remove letsencrypt volume from nginx (no SSL yet)
 cat > "$APP_DIR/docker-compose.override.yml" <<'COMPOSE'
 services:
   nginx:
@@ -90,45 +90,50 @@ services:
 COMPOSE
 echo "      Done."
 
-# ── 4. Environment file ──────────────────────────────────────────────────────
+# ── 4. Env file — PAUSE until user fills it in ───────────────────────────────
 echo ""
 echo "[4/5] Setting up .env.production..."
 if [ ! -f "$APP_DIR/.env.production" ]; then
     cp "$APP_DIR/.env.example" "$APP_DIR/.env.production"
-    echo "      Created from .env.example."
-else
-    echo "      Already exists — skipping."
 fi
 
-# ── 5. Start ─────────────────────────────────────────────────────────────────
-echo ""
-echo "[5/5] Building and starting (this takes a few minutes)..."
-cd "$APP_DIR"
-docker compose up --build -d
-echo "      Done."
+SERVER_IP=$(curl -s --connect-timeout 5 ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
-# ── Summary ──────────────────────────────────────────────────────────────────
-SERVER_IP=$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 echo ""
-echo "================================================"
-echo "  App is starting at http://$SERVER_IP"
-echo "================================================"
-echo ""
-echo "  Fill in your secrets, then restart:"
+echo "================================================================"
+echo "  ΣΗΜΑΝΤΙΚΟ: Συμπλήρωσε τα secrets σου τώρα:"
 echo ""
 echo "    nano $APP_DIR/.env.production"
 echo ""
-echo "  Required variables:"
-echo "    NEXT_PUBLIC_SUPABASE_URL"
-echo "    NEXT_PUBLIC_SUPABASE_ANON_KEY"
-echo "    SUPABASE_SERVICE_ROLE_KEY"
-echo "    GEMINI_API_KEY"
-echo "    RESEND_API_KEY"
+echo "  Υποχρεωτικά:"
+echo "    NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co"
+echo "    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhb..."
+echo "    SUPABASE_SERVICE_ROLE_KEY=eyJhb..."
+echo "    GEMINI_API_KEY=AIza..."
+echo "    RESEND_API_KEY=re_..."
 echo "    NEXT_PUBLIC_APP_URL=http://$SERVER_IP"
+echo "================================================================"
 echo ""
-echo "  After filling .env.production:"
-echo "    cd $APP_DIR && docker compose up --build -d"
+read -rp "  Πάτα ENTER όταν είναι έτοιμο το .env.production..."
 echo ""
-echo "  Watch logs:"
-echo "    docker compose -f $APP_DIR/docker-compose.yml logs -f web"
+
+# ── 5. Build & start ─────────────────────────────────────────────────────────
+echo "[5/5] Building and starting (takes a few minutes)..."
+cd "$APP_DIR"
+
+# Export vars so NEXT_PUBLIC_ values are baked into the Next.js bundle at build time
+set -a
+# shellcheck disable=SC1091
+source "$APP_DIR/.env.production"
+set +a
+
+docker compose up --build -d
+
+echo ""
+echo "================================================"
+echo "  Kleo τρέχει στο http://$SERVER_IP"
+echo "================================================"
+echo ""
+echo "  Logs:    docker compose -f $APP_DIR/docker-compose.yml logs -f web"
+echo "  Update:  bash $APP_DIR/deploy.sh"
 echo ""
