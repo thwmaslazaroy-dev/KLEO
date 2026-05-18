@@ -7,7 +7,6 @@ FROM base AS builder
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
-COPY packages/supabase/package.json ./packages/supabase/
 RUN pnpm install --frozen-lockfile
 
 # Copy source (node_modules excluded via .dockerignore)
