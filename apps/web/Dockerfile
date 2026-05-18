@@ -2,15 +2,17 @@ FROM node:20-alpine AS base
 RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
 WORKDIR /app
 
-FROM base AS deps
+FROM base AS builder
+# Copy workspace manifests first so install is cached unless deps change
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
+COPY packages/supabase/package.json ./packages/supabase/
 RUN pnpm install --frozen-lockfile
 
-FROM base AS builder
-COPY --from=deps /app/node_modules ./node_modules
+# Copy source (node_modules excluded via .dockerignore)
 COPY . .
+
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter @kleo/web build
 
