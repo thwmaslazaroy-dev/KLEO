@@ -11,5 +11,8 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
 ]
+config.resolver.extraNodeModules = {
+  '@babel/runtime': path.resolve(monorepoRoot, 'node_modules/@babel/runtime'),
+}
 
 module.exports = config
