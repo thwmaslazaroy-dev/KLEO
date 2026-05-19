@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@expo/config-plugins': ^8.0.0
+
 importers:
 
   .:
@@ -881,14 +884,8 @@ packages:
   '@expo/code-signing-certificates@0.0.5':
     resolution: {integrity: sha512-BNhXkY1bblxKZpltzAx98G2Egj9g1Q+JRcvR7E99DOj862FTCX+ZPsAUtPTr7aHxwtrL7+fL3r0JSmM9kBm+Bw==}
 
-  '@expo/config-plugins@2.0.4':
-    resolution: {integrity: sha512-JGt/X2tFr7H8KBQrKfbGo9hmCubQraMxq5sj3bqDdKmDOLcE1a/EDCP9g0U4GHsa425J8VDIkQUHYz3h3ndEXQ==}
-
   '@expo/config-plugins@8.0.11':
     resolution: {integrity: sha512-oALE1HwnLFthrobAcC9ocnR9KXLzfWEjgIe4CPe+rDsfC6GDs8dGYCXfRFoCEzoLN4TGYs9RdZ8r0KoCcNrm2A==}
-
-  '@expo/config-types@41.0.0':
-    resolution: {integrity: sha512-Ax0pHuY5OQaSrzplOkT9DdpdmNzaVDnq9VySb4Ujq7UJ4U4jriLy8u93W98zunOXpcu0iiKubPsqD6lCiq0pig==}
 
   '@expo/config-types@51.0.3':
     resolution: {integrity: sha512-hMfuq++b8VySb+m9uNNrlpbvGxYc8OcFCUX9yTmi9tlx6A4k8SDabWFBgmnr4ao3wEArvWrtUQIfQCVtPRdpKA==}
@@ -908,9 +905,6 @@ packages:
   '@expo/json-file@10.0.14':
     resolution: {integrity: sha512-yWwBFywFv+SxkJp/pIzzA416JVYflNUh7pqQzgaA6nXDqRyK7KfrqVzk8PdUfDnqbBcaZZxpzNssfQZzp5KHrA==}
 
-  '@expo/json-file@8.2.30':
-    resolution: {integrity: sha512-vrgGyPEXBoFI5NY70IegusCSoSVIFV3T3ry4tjJg1MFQKTUlR7E0r+8g8XR6qC705rc2PawaZQjqXMAVtV6s2A==}
-
   '@expo/json-file@8.3.3':
     resolution: {integrity: sha512-eZ5dld9AD0PrVRiIWpRkm5aIoWBw3kAyd8VkuWEy92sEthBKDDDHAnK2a0dw0Eil6j7rK7lS/Qaq/Zzngv2h5A==}
 
@@ -928,9 +922,6 @@ packages:
 
   '@expo/package-manager@1.10.5':
     resolution: {integrity: sha512-nCP9Mebfl3jvOr0/P6VAuyah6PAtun+aihIL2zAtuE8uSe94JWkVZ7051i0MUVO+y3gFpBqnr8IIH5ch+VJjHA==}
-
-  '@expo/plist@0.0.13':
-    resolution: {integrity: sha512-zGPSq9OrCn7lWvwLLHLpHUUq2E40KptUFXn53xyZXPViI0k9lbApcR9KlonQZ95C+ELsf0BQ3gRficwK92Ivcw==}
 
   '@expo/plist@0.1.3':
     resolution: {integrity: sha512-GW/7hVlAylYg1tUrEASclw1MMk9FP4ZwyFAY/SUTJIhPDQHtfOlXREyWV3hhrHdX/K+pS73GNgdfT6E/e+kBbg==}
@@ -3035,10 +3026,6 @@ packages:
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
-  json5@1.0.2:
-    resolution: {integrity: sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA==}
-    hasBin: true
-
   json5@2.2.3:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
@@ -4712,10 +4699,6 @@ packages:
     resolution: {integrity: sha512-kCz5k7J7XbJtjABOvkc5lJmkiDh8VhjVCGNiqdKCscmVpdVUpEAyXv1xmCLkQJ5dsHqx3IPO4XW+NTDhU/fatA==}
     engines: {node: '>=10.0.0'}
 
-  xml2js@0.4.23:
-    resolution: {integrity: sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==}
-    engines: {node: '>=4.0.0'}
-
   xml2js@0.6.0:
     resolution: {integrity: sha512-eLTh0kA8uHceqesPqSE+VvO1CDDJWMwlQfB6LuN6T8w6MaDJ8Txm8P7s5cHD0miF0V+GGTZrDQfxPZQVsur33w==}
     engines: {node: '>=4.0.0'}
@@ -4731,10 +4714,6 @@ packages:
   xmlbuilder@15.1.1:
     resolution: {integrity: sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg==}
     engines: {node: '>=8.0'}
-
-  xmldom@0.5.0:
-    resolution: {integrity: sha512-Foaj5FXVzgn7xFzsKeNIde9g6aFBxTPi37iwsno8QvApmtg7KYrr+OPyRHcJF7dud2a5nGRBXK3n0dL62Gf7PA==}
-    engines: {node: '>=10.0.0'}
 
   xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
@@ -5833,23 +5812,6 @@ snapshots:
       node-forge: 1.4.0
       nullthrows: 1.1.1
 
-  '@expo/config-plugins@2.0.4':
-    dependencies:
-      '@expo/config-types': 41.0.0
-      '@expo/json-file': 8.2.30
-      '@expo/plist': 0.0.13
-      debug: 4.4.3
-      find-up: 5.0.0
-      fs-extra: 9.0.0
-      getenv: 1.0.0
-      glob: 7.1.6
-      resolve-from: 5.0.0
-      slash: 3.0.0
-      xcode: 3.0.1
-      xml2js: 0.4.23
-    transitivePeerDependencies:
-      - supports-color
-
   '@expo/config-plugins@8.0.11':
     dependencies:
       '@expo/config-types': 51.0.3
@@ -5869,8 +5831,6 @@ snapshots:
       xml2js: 0.6.0
     transitivePeerDependencies:
       - supports-color
-
-  '@expo/config-types@41.0.0': {}
 
   '@expo/config-types@51.0.3': {}
 
@@ -5927,13 +5887,6 @@ snapshots:
       '@babel/code-frame': 7.29.0
       json5: 2.2.3
 
-  '@expo/json-file@8.2.30':
-    dependencies:
-      '@babel/code-frame': 7.10.4
-      fs-extra: 9.0.0
-      json5: 1.0.2
-      write-file-atomic: 2.4.3
-
   '@expo/json-file@8.3.3':
     dependencies:
       '@babel/code-frame': 7.10.4
@@ -5979,12 +5932,6 @@ snapshots:
       npm-package-arg: 11.0.3
       ora: 3.4.0
       resolve-workspace-root: 2.0.1
-
-  '@expo/plist@0.0.13':
-    dependencies:
-      base64-js: 1.5.1
-      xmlbuilder: 14.0.0
-      xmldom: 0.5.0
 
   '@expo/plist@0.1.3':
     dependencies:
@@ -6367,7 +6314,7 @@ snapshots:
 
   '@react-native-voice/voice@3.2.4(react-native@0.74.0(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.2.79)(react@18.2.0))':
     dependencies:
-      '@expo/config-plugins': 2.0.4
+      '@expo/config-plugins': 8.0.11
       invariant: 2.2.4
       react-native: 0.74.0(@babel/core@7.29.0)(@babel/preset-env@7.29.5(@babel/core@7.29.0))(@types/react@18.2.79)(react@18.2.0)
     transitivePeerDependencies:
@@ -8572,10 +8519,6 @@ snapshots:
 
   json-schema-traverse@1.0.0: {}
 
-  json5@1.0.2:
-    dependencies:
-      minimist: 1.2.8
-
   json5@2.2.3: {}
 
   jsonfile@4.0.0:
@@ -10395,11 +10338,6 @@ snapshots:
       simple-plist: 1.3.1
       uuid: 7.0.3
 
-  xml2js@0.4.23:
-    dependencies:
-      sax: 1.6.0
-      xmlbuilder: 11.0.1
-
   xml2js@0.6.0:
     dependencies:
       sax: 1.6.0
@@ -10410,8 +10348,6 @@ snapshots:
   xmlbuilder@14.0.0: {}
 
   xmlbuilder@15.1.1: {}
-
-  xmldom@0.5.0: {}
 
   xtend@4.0.2: {}
 
