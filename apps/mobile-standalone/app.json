@@ -5,9 +5,12 @@
     "version": "1.0.0",
     "scheme": "kleo",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "backgroundColor": "#141E2E",
     "splash": {
-      "backgroundColor": "#141E2E"
+      "image": "./assets/splash.png",
+      "backgroundColor": "#141E2E",
+      "resizeMode": "contain"
     },
     "ios": {
       "bundleIdentifier": "com.tommyjc2001.kleo",
@@ -16,6 +19,7 @@
     "android": {
       "package": "com.tommyjc2001.kleo",
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#141E2E"
       }
     },

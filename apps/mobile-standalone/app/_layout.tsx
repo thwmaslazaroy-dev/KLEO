@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import * as SplashScreen from 'expo-splash-screen'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { supabase } from '@/lib/supabase/client'
 import { initDB } from '@/lib/sqlite/db'
 import { registerPushToken } from '@/lib/notifications/push'
@@ -99,10 +100,10 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style="light" backgroundColor="#141E2E" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#141E2E' } }} />
-    </>
+    </SafeAreaProvider>
   )
 }
 
