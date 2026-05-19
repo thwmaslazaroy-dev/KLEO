@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Kleo",
+    "slug": "kleo",
+    "version": "1.0.0",
+    "scheme": "kleo",
+    "orientation": "portrait",
+    "backgroundColor": "#141E2E",
+    "splash": {
+      "backgroundColor": "#141E2E"
+    },
+    "ios": {
+      "bundleIdentifier": "com.tommyjc2001.kleo",
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.tommyjc2001.kleo",
+      "adaptiveIcon": {
+        "backgroundColor": "#141E2E"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-notifications",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Ο Kleo χρησιμοποιεί Face ID για ασφάλεια."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b90fd673-8820-48ec-8e88-0981ae6dd8cd"
+      }
+    }
+  }
+}
