@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import * as SplashScreen from 'expo-splash-screen'
 import { supabase } from '@/lib/supabase/client'
 import { initDB } from '@/lib/sqlite/db'
 import { registerPushToken } from '@/lib/notifications/push'
@@ -9,6 +10,7 @@ import { hasPIN } from '@/lib/security/pin'
 import { useRouter, useSegments } from 'expo-router'
 import type { Session } from '@supabase/supabase-js'
 
+SplashScreen.preventAutoHideAsync()
 setupNotificationHandler()
 
 export default function RootLayout() {
@@ -35,6 +37,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!ready) return
+
+    SplashScreen.hideAsync()
 
     const inAuth = segments[0] === '(auth)'
     const inPin = segments[0] === 'pin'
