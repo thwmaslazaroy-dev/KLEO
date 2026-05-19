@@ -8,8 +8,8 @@ dist
 
 # Expo
 .expo
-android/
 ios/
+# android/ is committed (bare workflow) so EAS doesn't regenerate it
 
 # Supabase
 supabase/.branches
